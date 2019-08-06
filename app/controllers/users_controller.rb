@@ -3,38 +3,25 @@ class UsersController < ApplicationController
 
   def index
     users = User.page(params[:page]).per(params[:per_page] || 10)
-
-    # TO-DO: switch to ActiveModel::Serializer
-    render json: {'users': users}, status: :ok
+    json_response(data: users)
   end
 
   def show
     users = User.find_by(customer_id: params[:id])
-
-    # TO-DO: switch to ActiveModel::Serializer
-    render json: {'users': users}, status: :ok
+    json_response(data: users)
   end
 
   def search
     users = FilterUsers.new(params).search
 
     users = users.page(params[:page]).per(params[:per_page] || 10)
-    # TO-DO switch to ActiveModel::Serializer
-    render json: {'users': users}, status: :ok
+    json_response(data: users)
   end
 
   def create
-    User.destroy_all
-    BaseParser.new(file: create_params).call
-    # TO-DO switch to ActiveModel::Serializer
-
+    process_request
     json_response(message: 'Successfully uploaded file. Processing in progress...')
-
-    # TO-DO:
-    # Fix ActiveJob error
-    # export users
   rescue => error
-    # TO-DO switch to ActiveModel::Serializer
     json_error_response(message: 'Error while processing file',
                         status: :unprocessable_entity, errors: error
                       )
@@ -51,5 +38,14 @@ class UsersController < ApplicationController
 
     def verify_token
       MailchimpVerifier.new(request.headers).call
+    end
+
+    def process_request
+      User.destroy_all
+      file_type = FileValidator.call(create_params)
+      if file_type.presence == 'Xls'
+        BaseParser.new(file: create_params, file_parser: XlsParser.new).call
+      end
+      BaseParser.new(file: create_params).call
     end
 end
