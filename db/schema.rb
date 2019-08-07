@@ -10,39 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_03_174616) do
+ActiveRecord::Schema.define(version: 2019_08_06_041245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "job_classifications", force: :cascade do |t|
-    t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "regions", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.integer "customer_id"
-    t.integer "age"
-    t.string "gender"
-    t.bigint "region_id"
-    t.bigint "job_classification_id"
-    t.string "date_joined"
-    t.integer "balance"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.integer "customer_id", null: false
+    t.integer "age", null: false
+    t.string "gender", null: false
+    t.string "region", null: false
+    t.string "job_classification", null: false
+    t.string "date_joined", null: false
+    t.integer "balance", null: false
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["job_classification_id"], name: "index_users_on_job_classification_id"
-    t.index ["region_id"], name: "index_users_on_region_id"
+    t.index ["customer_id"], name: "index_users_on_customer_id", unique: true
   end
 
-  add_foreign_key "users", "job_classifications"
-  add_foreign_key "users", "regions"
 end
