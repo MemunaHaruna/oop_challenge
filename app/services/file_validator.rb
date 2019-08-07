@@ -5,8 +5,9 @@ class FileValidator
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   ]
 
-  class << self
+  @@TYPE = {csv: 'csv', xls: 'xls'}
 
+  class << self
     def call(file)
       set_format(file)
     end
@@ -19,7 +20,11 @@ class FileValidator
     end
 
     def set_format(file)
-      'Xls' if get_format(file) == (@@VALID_FORMATS[1] || @@VALID_FORMATS[2])
+      'xls' if get_format(file) == (@@VALID_FORMATS[1] || @@VALID_FORMATS[2])
+    end
+
+    def type
+      HashWithIndifferentAccess.new(@@TYPE)
     end
   end
 end

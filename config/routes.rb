@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     collection do
       post :mailchimp
       get :search
+      post :report
     end
   end
 end
