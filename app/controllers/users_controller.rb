@@ -53,7 +53,7 @@ class UsersController < ApplicationController
     def process_request
       User.destroy_all
       file_type = FileValidator.call(create_params)
-      if file_type.presence == FileValidator.type[file_type]
+      if(file_type && file_type.presence == FileValidator.type[file_type])
         BaseParser.new(file: create_params, file_parser: XlsParser.new).call
       end
       BaseParser.new(file: create_params).call
