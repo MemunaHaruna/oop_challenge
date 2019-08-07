@@ -6,7 +6,6 @@ class ImportUsersJob < ApplicationJob
   around_perform :log_action
 
   def perform(user, subscription_service: nil)
-    User.create! user
     subscription_service =
       subscription_service || MailchimpService.new(user: user, url: mailchimp_users_url)
     subscription_service.process

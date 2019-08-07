@@ -6,7 +6,9 @@ class User < ApplicationRecord
 
   def self.update_status(result)
     user = find_by(customer_id: result['customer_id'])
-    status = 'subscribed' if result['status'] == 'Success'
-    user.update(status: status) if user
+    status = 'subscribed' if (result['status'] && result['status'] == 'Success')
+    if user && status
+      user.update(status: status)
+    end
   end
 end

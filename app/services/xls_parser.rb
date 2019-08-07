@@ -1,8 +1,11 @@
-require 'csv'
+require 'spreadsheet'
+# Spreadsheet.client_encoding = 'UTF-8'
 
-class CsvParser
+class XlsParser
   def parse(file)
-    CSV.foreach(file.path, headers: true) do |row|
+    sheet = Spreadsheet.open file.path
+    sheet = sheet.worksheet 0
+    sheet.each do |row|
       user = {
         customer_id: row[0],
         first_name: row[1],
